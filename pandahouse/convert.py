@@ -64,11 +64,12 @@ def to_dataframe(lines, **kwargs):
 
     dtypes, parse_dates, converters = {}, [], {}
     for name, chtype in zip(names, types):
-        dtype = CH2PD.get(chtype, 'object')
-
-        if chtype.startswith("Array("):
-            converters[name] = decode_array
-        elif dtype == 'object':
+        if chtype in CH2PD:
+            dtype = CH2PD[chtype]
+        else:
+            dtype = 'object'
+        #dtype = CH2PD[chtype]
+        if dtype == 'object':
             converters[name] = decode_escapes
         elif dtype.startswith('datetime'):
             parse_dates.append(name)
